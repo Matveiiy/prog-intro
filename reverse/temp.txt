@@ -1,0 +1,75 @@
+/*
+________00000000000___________000000000000_________
+______00000000_____00000___000000_____0000000______
+____0000000_____________000______________00000_____
+___0000000_______________0_________________0000____
+__000000____________________________________0000___
+__00000_____________________________________ 0000__
+_00000______________________________________00000__
+_00000_____________________________________000000__
+__000000_________________________________0000000___
+___0000000______________________________0000000____
+_____000000____________________________000000______
+_______000000________________________000000________
+__________00000_____________________0000___________
+_____________0000_________________0000_____________
+_______________0000_____________000________________
+_________________000_________000___________________
+_________________ __000_____00_____________________
+______________________00__00_______________________
+________________________00_________________________
+*/
+
+import java.util.Scanner;
+import java.io.Console;
+import java.util.ArrayList;
+
+public class Reverse {
+    static int START_SIZE = 1;
+    private static int[] realloc(int[] cur, int size) {
+        int[] temp = new int[size * 2];
+        System.arraycopy(cur, 0, temp, 0, size);
+        return temp;
+    }
+    private static void print(ArrayList<int[]> lines) {
+        for (int i = lines.size() - 1; i >= 0; --i) {
+            int[] cur = lines.get(i);
+            for (int j = cur.length - 1; j >= 0; --j) {
+                System.out.print(cur[j]);
+                System.out.print(" ");
+            }
+            System.out.println();
+        }
+    }
+    
+    public static void main(String args[]) {
+        Scanner scan = new Scanner(System.in);
+        int[] prv = new int[START_SIZE];
+        int[] cur = new int[START_SIZE];
+        int cntCur, cntPrev = 0;
+        int curPrefix, prevPrefix = 0;
+        while (scan.hasNextLine()) {
+            Scanner scanLine = new Scanner(scan.nextLine());
+            cntCur = 0;
+            while (scanLine.hasNextInt()) {
+                if (cntCur == cur.length) cur = realloc(cur, cntCur);
+                cur[cntCur++] = scanLine.nextInt();
+            }
+            curPrefix = 0;
+            for (int i = 0; i < cur.length; ++i) {
+                curPrefix += cur[i];
+                cur[i] = curPrefix + ((i < cntPrev) ? prv[i] : prevPrefix); 
+                System.out.print(cur[i]);
+                System.out.print(' ');
+            }
+            prevPrefix = cur[cur.length - 1];
+            cntPrev = cntCur;
+            
+            int[] temp = prv;
+            prv = cur;
+            cur = temp;
+            //swap(cur, prv);
+            System.out.println();
+        }
+    }
+}

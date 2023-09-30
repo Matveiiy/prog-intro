@@ -31,7 +31,6 @@ public class WordStatInput{
 
     public static void main(String[] args) {
         data = new LinkedHashMap<String, Integer>();
-        StringBuilder result = new StringBuilder();
         try (FileReader reader = new FileReader(new File(args[0]), StandardCharsets.UTF_8)) {
             char[] buffer = new char[BUFFER_SIZE];
             StringBuilder builder = new StringBuilder();
@@ -41,10 +40,6 @@ public class WordStatInput{
                 //System.err.println(buffer);
             }
             addWord(builder);
-            
-            for (var x : data.entrySet()) {
-                result.append(x.getKey().toString() + " " + x.getValue().toString() + "\n");
-            }
         } catch(FileNotFoundException e) {
             System.err.println("Error! Cannot open file " + args[0]);
             return;
@@ -52,8 +47,15 @@ public class WordStatInput{
             System.err.println("...");
             return;
         }
-        try (var writer = new FileWriter(new File(args[1]), StandardCharsets.UTF_8)) {
-            writer.append(result.toString());
+        try {
+            var writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(args[1]),
+                "UTF-8"
+                ));
+            for (var x : data.entrySet()) {
+                writer.write(x.getKey() + " " + x.getValue().toString() + "\n");
+            }
+            writer.close();
         } catch(IOException e) {
             System.err.println("Cannot open file " + args[1]);
         }
